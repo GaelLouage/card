@@ -1,0 +1,92 @@
+<section>
+<img class="bg" src="./assets/images/bg-main-desktop.png">
+<div class="container">
+
+    <div class="box">
+        <div class="cards">
+            <div class="firC">
+                <span class="big-white-circle"></span>
+                <span class="small-white-transparent-circle"></span>
+                <p class="front-card-name">{{cardUser.cardHolderName}}</p>
+                
+                <p class="front-card-exp-date" *ngIf="cardUser.expiration.month; else elseMonth">{{getExpiration(cardUser.expiration.month,2)}} / {{getExpiration(cardUser.expiration.year,2)}}</p>
+                <ng-template #elseMonth>
+                    <p class="front-card-exp-date">00/00</p>
+                </ng-template>
+                <p class="front-card-number" *ngIf="cardUser.cardNumber; else elseCardNumber">{{getCardNumber(cardUser.cardNumber)}}</p>
+                <ng-template #elseCardNumber>
+                   <p class="front-card-number">0000 0000 0000 000</p>
+                </ng-template>
+                <img  class="front-card" src="./assets/images/bg-card-front.png"/>
+            </div>
+            <div>
+                <p *ngIf="cardUser.expiration.cvc; else elseCVC">{{getExpiration(cardUser.expiration.cvc,3)}}</p> 
+                <ng-template #elseCVC>
+                    <p>000</p> 
+                </ng-template>
+                <img class="back-card" src="./assets/images/bg-card-back.png">
+            </div>
+
+        </div>
+        <form #userForm="ngForm" *ngIf="!submit" (ngSubmit)="onSubmit()" novalidate>
+            <!-- card holder -->
+            <div class="card-holder">
+                <label>CARDHOLDER NAME</label>
+                <input type="text" [ngStyle]="cardHolderName.valid || cardHolderName.untouched ? inputNoError: inputError " [class.is-invalid]="cardHolderName.invalid && cardHolderName.touched"  #cardHolderName="ngModel" name="cardHolderName"  [(ngModel)]="cardUser.cardHolderName" required>
+           
+                    <small [ngStyle]="cardHolderName.valid || cardHolderName.untouched ? noError: error ">Username is required</small>
+        
+            </div>
+            <!-- card number -->
+            <div class="card-number">
+                <label>CARD NUMBER</label>
+                <input type="text" #cardNumber="ngModel" name="cardNumber" [class.is-invalid]="cardNumber.invalid && cardNumber.touched" required  [(ngModel)]="cardUser.cardNumber" pattern="^\d{16}$" maxlength="16" minlength="16">
+
+                 <div *ngIf="cardNumber.errors && (cardNumber.invalid || cardNumber.untouched)">
+                <small  [ngStyle]="cardNumber.valid || cardNumber.untouched ? noError: error " *ngIf="cardNumber.errors.required">Card number is required</small>
+                <small [ngStyle]="cardNumber.valid || cardNumber.untouched ? noError: error " *ngIf="cardNumber.errors.pattern">Card number must be 16 digits</small>
+                 </div>
+              </div>
+            <!-- exp date -->
+            <div class="card-exp-date">
+                <div>
+                    <label>EXP.DATE Month(00)</label>
+                    <label>Year(00)</label>
+                    <label>CVC</label>
+                </div>
+                <div class="inputs-date">
+                    <div class="inputs-date-in">
+                        <input  type="text" #month="ngModel" [ngStyle]="month.valid || month.untouched ? inputNoError: inputError " max="12" name="month" required [(ngModel)]="cardUser.expiration.month" maxlength="2" pattern="[0-9]*" >
+                        <input type="text" #year="ngModel" [ngStyle]="year.valid || year.untouched ? inputNoError: inputError "  name="year" required [(ngModel)]="cardUser.expiration.year" maxlength="2" required pattern="[0-9]*">
+                        <input type="text" #cvc="ngModel" [ngStyle]="cvc.valid || cvc.untouched ? inputNoError: inputError "  name="cvc" required [(ngModel)]="cardUser.expiration.cvc" maxlength="3" required  pattern="^\d{3}$" >
+                    </div>
+            
+                    <div *ngIf="month.errors && (month.invalid || month.untouched)">
+                        <small  [ngStyle]="month.valid || month.untouched ? noError: error " *ngIf="month.errors.required">Month is required</small>
+                        <small  [ngStyle]="month.valid || month.untouched ? noError: error " *ngIf="month.errors.pattern">Month number must be 2 digits</small>
+                 </div>
+                 <small  [ngStyle]="month.value <= 12 ? noError: error" >Month number must be less than 12</small>
+                 <div *ngIf="(year.errors && (year.invalid || year.untouched))">
+                    <small  [ngStyle]="year.valid || year.untouched ? noError: error " *ngIf="year.errors.required">Year  is required</small>
+                    <small  [ngStyle]="year.valid || year.untouched ? noError: error " *ngIf="year.errors.pattern">Year  must be 2 digits</small>
+               </div>
+               <div *ngIf="cvc.errors && (cvc.invalid || cvc.untouched)">
+                <small  [ngStyle]="cvc.valid || cvc.untouched ? noError: error " *ngIf="cvc.errors.required">cvc  is required</small>
+                <small  [ngStyle]="cvc.valid || cvc.untouched ? noError: error " *ngIf="cvc.errors.pattern">cvc must be 3 digits</small>
+           </div>
+                </div>
+            </div>
+            <button>Confirm</button>
+        </form>
+        <div *ngIf="submit" class="succes">
+           <img src="./assets/images/success.PNG"/>
+            <h1>THANK YOU!</h1>
+            <p>We've added your card details</p>
+            <button>Continue</button>
+        </div>
+    </div>
+
+</div>
+<!--onsubmit  -->
+
+</section>
