@@ -305,5 +305,9 @@ form {
     .inputs-date input {
         width: 9.2em;
     }
+    .inputs-date input:nth-child(2) {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
 }
 
